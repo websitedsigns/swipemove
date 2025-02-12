@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import SwipeContainer from '../components/SwipeContainer';
 import SearchFilters from '../components/SearchFilters';
 import WelcomeScreen from '../components/WelcomeScreen';
-import { Property } from '../types';
+import { Property } from '../../types/types';
 import { IconButton, Button, Box, Typography } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import PropertyCard from '../components/PropertyCard'; // Import the PropertyCard component
 import './Home.css'; // Add CSS for the landing page
+import logo from '../assets/SwipeMove-3.png';
 
 const Home: React.FC = () => {
   const [properties, setProperties] = useState<Property[]>([]);
@@ -222,6 +223,7 @@ const Home: React.FC = () => {
             <SwipeContainer properties={properties} onSwipeLeft={handleSwipeLeft} onSwipeRight={handleSwipeRight} />
           ) : (
             <Box className="landing-page">
+              
               <Typography variant="h3" className="landing-title">
                 SwipeMove 
               </Typography>

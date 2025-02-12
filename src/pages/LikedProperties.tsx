@@ -1,7 +1,7 @@
 // src/pages/LikedProperties.tsx
 import React from 'react';
 import PropertyCard from '../components/PropertyCard';
-import { Property } from '../types';
+import { Property } from '../../types/types';
 
 interface LikedPropertiesProps {
   likedProperties: Property[];

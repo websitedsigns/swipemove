@@ -1,5 +1,5 @@
 import React from 'react';
-import { Property } from '../types';
+import { Property } from '../../types/types';
 import { Box, Typography } from '@mui/material';
 
 interface PropertyCardProps {

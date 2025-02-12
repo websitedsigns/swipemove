@@ -1,7 +1,6 @@
 import React, { useEffect } from 'react';
-import './WelcomeScreen.css'; // Add CSS for animations
-import logo from '../images/logo.png'; // Import the logo image
-
+import './WelcomeScreen.css'; // Import the CSS file
+import logo from '../assets/SwipeMove-3.png';
 interface WelcomeScreenProps {
   onComplete: () => void;
 }
@@ -23,8 +22,6 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onComplete }) => {
   return (
     <div className="welcome-container" onClick={handleClick}>
       <img src={logo} alt="SwipeMove Logo" className="welcome-logo" />
-      <h1 className="welcome-text">Welcome to SwipeMove</h1>
-      <p className="welcome-subtext">Find your dream home with a swipe</p>
     </div>
   );
 };

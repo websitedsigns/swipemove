@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useSwipeable } from 'react-swipeable';
 import PropertyCard from './PropertyCard';
-import { Property } from '../types';
+import { Property } from '../../types/types';
 import { Button, Box } from '@mui/material';
 
 interface SwipeContainerProps {

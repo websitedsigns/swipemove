@@ -4,7 +4,7 @@
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background: linear-gradient(135deg, #00a1e5, #003b5c); /* Rightmove-inspired gradient */
+  background: linear-gradient(135deg, #5abae3, #459ed1); /* Gradient background */
   color: white;
   font-family: Arial, sans-serif;
   cursor: pointer; /* Indicates the screen is clickable */
@@ -12,10 +12,11 @@
 }
 
 .welcome-logo {
-  width: 150px; /* Adjust size as needed */
-  height: 150px; /* Adjust size as needed */
+  width: 800px; /* Adjust the size as needed */
+  height: auto; /* Maintain aspect ratio */
   margin-bottom: 20px; /* Space between logo and text */
-  animation: bounce 2s infinite; /* Add a bounce animation */
+  opacity: 0;
+  animation: fadeIn 5s forwards;
 }
 
 .welcome-text {
