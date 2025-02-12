@@ -1,0 +1,34 @@
+.search-filters-container {
+    text-align: center;
+    margin: 20px;
+    padding: 20px;
+    background-color: #5DC2BB;
+    border-radius: 10px;
+  }
+  
+  .search-filters-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  
+  .search-filters-form-control {
+    margin: 10px;
+    min-width: 120px;
+    background-color: white;
+  }
+  
+  .search-filters-button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    background-color: #48865f;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  .search-filters-button:hover {
+    background-color: #5a8887;
+  }
