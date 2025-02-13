@@ -1,24 +1,25 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import SwipeContainer from "../components/SwipeContainer";
 import SearchFilters from "../components/SearchFilters";
 import WelcomeScreen from "../components/WelcomeScreen";
 import { Property } from "../../types/types";
-import { sampleProperties } from "../data/propertyData"; 
-
+import { sampleProperties } from "../data/propertyData";
 import {
   IconButton,
   Button,
   Box,
-  Typography,
   Badge,
   Menu,
   MenuItem,
+  Typography,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import PropertyCard from "../components/PropertyCard";
 import "./Home.css";
 import logo from "../assets/SwipeMove-3.png";
+import LoginModal from "../components/LoginModal"; // Import the updated LoginModal
+import RegisterModal from "../components/RegisterModal"; // Import the RegisterModal
 
 const Home: React.FC = () => {
   const [properties, setProperties] = useState<Property[]>([]);
@@ -34,6 +35,36 @@ const Home: React.FC = () => {
   });
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null); // For liked properties dropdown
+  const [showLoginModal, setShowLoginModal] = useState(false); // State for login modal
+  const [showRegisterModal, setShowRegisterModal] = useState(false); // State for register modal
+  const [user, setUser] = useState<{ name: string } | null>(null); // Store user info (null = not logged in)
+
+  // Handle login success
+  const handleLogin = (userName: string) => {
+    setUser({ name: userName });
+    localStorage.setItem("userName", userName); // Save user name to localStorage
+    setShowLoginModal(false);
+  };
+
+  // Handle register success
+  const handleRegister = (userName: string) => {
+    handleLogin(userName); // Use the same handler for registering and logging in
+    setShowRegisterModal(false); // Close the register modal after registration
+  };
+
+  useEffect(() => {
+    // Check if there's a user name stored in localStorage on component mount
+    const storedUserName = localStorage.getItem("userName");
+    if (storedUserName) {
+      setUser({ name: storedUserName });
+    }
+  }, []);
+
+  // Handle logout
+  const handleLogout = () => {
+    setUser(null);
+    localStorage.removeItem("userName"); // Clear user name from localStorage
+  };
 
   const handleSearch = (filters: {
     minPrice: number;
@@ -43,7 +74,6 @@ const Home: React.FC = () => {
     type: string;
   }) => {
     setSearchFilters(filters); // Save the filters
-    // Simulate the filtering of sampleProperties based on search filters
     const filteredProperties = sampleProperties.filter((property) => {
       return (
         property.price >= filters.minPrice &&
@@ -66,12 +96,10 @@ const Home: React.FC = () => {
     setLikedProperties((prev) => [...prev, property]);
   };
 
-  // Handle opening the liked properties dropdown
   const handleLikedPropertiesClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
-  // Handle closing the liked properties dropdown
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -110,19 +138,36 @@ const Home: React.FC = () => {
               />
             </Box>
 
-            {/* Liked Properties and Sign-In/Log-In */}
+            {/* Liked Properties and User Authentication */}
             <Box sx={{ display: "flex", alignItems: "center", gap: "10px" }}>
               <IconButton onClick={handleLikedPropertiesClick}>
                 <Badge badgeContent={likedProperties.length} color="primary">
                   <AccountCircleIcon />
                 </Badge>
               </IconButton>
-              <Button
-                variant="contained"
-                sx={{ backgroundColor: "#5DC2BB", color: "white" }}
-              >
-                Sign In / Log In
-              </Button>
+              {!user ? (
+                <Button
+                  variant="contained"
+                  sx={{ backgroundColor: "#5DC2BB", color: "white" }}
+                  onClick={() => setShowLoginModal(true)} // Show login modal
+                >
+                  Sign In / Register
+                </Button>
+              ) : (
+                <>
+                  <Typography variant="h6">{user.name}</Typography>
+                  <Button
+                    variant="contained"
+                    sx={{
+                      backgroundColor: "#FF5F5F",
+                      color: "white",
+                    }}
+                    onClick={handleLogout} // Log out user
+                  >
+                    Sign Out
+                  </Button>
+                </>
+              )}
             </Box>
           </Box>
 
@@ -150,10 +195,22 @@ const Home: React.FC = () => {
             />
           )}
 
+          {/* Login Modal */}
+          <LoginModal
+            open={showLoginModal}
+            onClose={() => setShowLoginModal(false)}
+            onLogin={handleLogin} // Pass the onLogin handler to the LoginModal
+          />
+
+          {/* Register Modal */}
+          <RegisterModal
+            open={showRegisterModal}
+            onClose={() => setShowRegisterModal(false)}
+            onRegister={handleRegister} // Use handleRegister for registration
+          />
+
           {/* Main Content */}
           <Box sx={{ marginTop: "80px" }}>
-            {" "}
-            {/* Add margin to avoid overlap with the header */}
             {properties.length > 0 ? (
               <SwipeContainer
                 properties={properties}
