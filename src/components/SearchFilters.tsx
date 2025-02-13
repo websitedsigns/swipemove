@@ -41,7 +41,7 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({ onSearch, onClose }) => {
   // Options
   const priceOptions = Array.from({ length: 101 }, (_, i) => i * 10000);
   const bedroomOptions = [0, 1, 2, 3, 4, 5];
-  const propertyTypes = ['House', 'Flat', 'Terrace', 'Bungalow', 'Studio', 'Maisonette'];
+  const propertyTypes = ['House', 'Flat'];
 
   return (
     <>
