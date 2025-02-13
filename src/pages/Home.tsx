@@ -249,23 +249,46 @@ const Home: React.FC = () => {
         <WelcomeScreen onComplete={() => setShowWelcome(false)} />
       ) : (
         <>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '10px 20px', backgroundColor: '#f5f5f5', position: 'fixed', top: 0, left: 0, right: 0, zIndex: 1000 }}>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              padding: "1px 20px",
+              backgroundColor: "#f5f5f5",
+              position: "fixed",
+              top: 0,
+              left: 0,
+              right: 0,
+              zIndex: 1000,
+            }}
+          >
             {/* Logo and Search Button */}
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
-              <img src={logo} alt="SwipeMove Logo" style={{ width: '150px', height: 'auto' }} />
+            <Box sx={{ display: "flex", alignItems: "center", gap: "20px" }}>
               <IconButton onClick={() => setShowSearchModal(true)}>
                 <SearchIcon />
               </IconButton>
             </Box>
-          
+            <Box sx={{ display: "flex", alignItems: "center", gap: "20px" }}>
+              <img
+                src={logo}
+                alt="SwipeMove Logo"
+                style={{ width: "250px", height: "auto", maxWidth: "100%" }}
+              />
+              </Box>
+
+
             {/* Liked Properties and Sign-In/Log-In */}
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: '20px' }}>
+            <Box sx={{ display: "flex", alignItems: "center", gap: "10px" }}>
               <IconButton onClick={handleLikedPropertiesClick}>
                 <Badge badgeContent={likedProperties.length} color="primary">
                   <AccountCircleIcon />
                 </Badge>
               </IconButton>
-              <Button variant="contained" sx={{ backgroundColor: '#5DC2BB', color: 'white' }}>
+              <Button
+                variant="contained"
+                sx={{ backgroundColor: "#5DC2BB", color: "white" }}
+              >
                 Sign In / Log In
               </Button>
             </Box>
@@ -279,7 +302,10 @@ const Home: React.FC = () => {
           >
             {likedProperties.map((property) => (
               <MenuItem key={property.id} onClick={handleClose}>
-                <PropertyCard property={property} onClick={() => window.open(property.url, '_blank')} />
+                <PropertyCard
+                  property={property}
+                  onClick={() => window.open(property.url, "_blank")}
+                />
               </MenuItem>
             ))}
           </Menu>
@@ -293,14 +319,24 @@ const Home: React.FC = () => {
           )}
 
           {/* Main Content */}
-          <Box sx={{ marginTop: '80px' }}> {/* Add margin to avoid overlap with the header */}
+          <Box sx={{ marginTop: "80px" }}>
+            {" "}
+            {/* Add margin to avoid overlap with the header */}
             {properties.length > 0 ? (
-              <SwipeContainer properties={properties} onSwipeLeft={handleSwipeLeft} onSwipeRight={handleSwipeRight} />
+              <SwipeContainer
+                properties={properties}
+                onSwipeLeft={handleSwipeLeft}
+                onSwipeRight={handleSwipeRight}
+              />
             ) : (
               <Box className="landing-page">
                 <Button
                   variant="contained"
-                  sx={{ backgroundColor: '#5DC2BB', color: 'white', marginTop: '20px' }}
+                  sx={{
+                    backgroundColor: "#5DC2BB",
+                    color: "white",
+                    marginTop: "20px",
+                  }}
                   onClick={() => setProperties(sampleProperties)}
                 >
                   Start Swiping
@@ -310,7 +346,7 @@ const Home: React.FC = () => {
                     <PropertyCard
                       key={property.id}
                       property={property}
-                      onClick={() => window.open(property.url, '_blank')}
+                      onClick={() => window.open(property.url, "_blank")}
                     />
                   ))}
                 </Box>
