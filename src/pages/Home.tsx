@@ -207,12 +207,13 @@ const Home: React.FC = () => {
         <WelcomeScreen onComplete={() => setShowWelcome(false)} />
       ) : (
         <>
-          <IconButton
-            onClick={() => setShowSearchModal(true)}
-            sx={{ position: 'absolute', top: '10px', center: '100px' }}
-          >
-            <SearchIcon />
-          </IconButton>
+          <Box sx={{ display: 'flex',  alignItems: 'center',  backgroundColor: '#f5f5f5' }}>
+            <IconButton
+              onClick={() => setShowSearchModal(true)}
+            >
+              <SearchIcon />
+            </IconButton>
+          </Box>
           {showSearchModal && (
             <SearchFilters
               onSearch={handleSearch}
@@ -223,14 +224,8 @@ const Home: React.FC = () => {
             <SwipeContainer properties={properties} onSwipeLeft={handleSwipeLeft} onSwipeRight={handleSwipeRight} />
           ) : (
             <Box className="landing-page">
-              
-              <Typography variant="h3" className="landing-title">
-                SwipeMove 
-              </Typography>
-              <Typography variant="h5" className="landing-subtitle">
-              Find Your Dream Home 
-              </Typography>
-              
+                          <img src={logo} alt="SwipeMove Logo" style={{ width: '500px' }} /> {/* Add your logo here */}
+
               <Box className="sample-properties">
                 {sampleProperties.map((property) => (
                   <PropertyCard
