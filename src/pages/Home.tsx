@@ -43,8 +43,14 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     const storedUserName = localStorage.getItem("userName");
+    const storedLikedProperties = localStorage.getItem("likedProperties");
+
     if (storedUserName) {
       setUser({ name: storedUserName });
+    }
+
+    if (storedLikedProperties) {
+      setLikedProperties(JSON.parse(storedLikedProperties));
     }
   }, []);
 
@@ -74,6 +80,12 @@ const Home: React.FC = () => {
 
   const handleCloseUserMenu = () => {
     setUserMenuAnchorEl(null);
+  };
+
+  const handlePropertyLike = (property: Property) => {
+    const updatedLikedProperties = [...likedProperties, property];
+    setLikedProperties(updatedLikedProperties);
+    localStorage.setItem("likedProperties", JSON.stringify(updatedLikedProperties)); // Save to localStorage
   };
 
   return (
@@ -223,7 +235,7 @@ const Home: React.FC = () => {
               <SwipeContainer
                 properties={properties}
                 onSwipeLeft={() => {}}
-                onSwipeRight={() => {}}
+                onSwipeRight={handlePropertyLike} // When a property is swiped right, like it
               />
             ) : (
               <Box className="landing-page">
