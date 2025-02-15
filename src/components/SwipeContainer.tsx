@@ -49,6 +49,7 @@ const SwipeContainer: React.FC<SwipeContainerProps> = ({ properties, onSwipeLeft
     alignItems: "flex-start", // Align vertically to the start, but you can change it to 'center' or 'flex-end'
     height: "80vh", // Use full viewport height
     paddingTop: "0px", // Adjust the top padding to move it lower
+    background: "#5dc2bb"
     }}
 >
 <PropertyCard property={properties[currentIndex]} onClick={() => window.open(properties[currentIndex].url, '_blank')} />
@@ -83,8 +84,8 @@ const SwipeContainer: React.FC<SwipeContainerProps> = ({ properties, onSwipeLeft
   <Button
     variant="contained"
     sx={{
-      backgroundColor: '#5DC2BB',
-      color: 'black',
+      backgroundColor: 'green',
+      color: 'white',
       width: '4em',
       fontSize: '1rem',
       padding: '10px 20px',

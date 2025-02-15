@@ -43,14 +43,17 @@ const Home: React.FC = () => {
 
   useEffect(() => {
     const storedUserName = localStorage.getItem("userName");
-    const storedLikedProperties = localStorage.getItem("likedProperties");
 
     if (storedUserName) {
       setUser({ name: storedUserName });
     }
 
-    if (storedLikedProperties) {
-      setLikedProperties(JSON.parse(storedLikedProperties));
+    // Only fetch liked properties if the user is logged in
+    if (storedUserName) {
+      const storedLikedProperties = localStorage.getItem("likedProperties");
+      if (storedLikedProperties) {
+        setLikedProperties(JSON.parse(storedLikedProperties));
+      }
     }
   }, []);
 
@@ -71,6 +74,8 @@ const Home: React.FC = () => {
   const handleLogout = () => {
     setUser(null);
     localStorage.removeItem("userName");
+    setLikedProperties([]); // Clear liked properties on logout
+    localStorage.removeItem("likedProperties"); // Clear liked properties from localStorage
     setUserMenuAnchorEl(null); // Close user menu
   };
 
@@ -83,9 +88,11 @@ const Home: React.FC = () => {
   };
 
   const handlePropertyLike = (property: Property) => {
-    const updatedLikedProperties = [...likedProperties, property];
-    setLikedProperties(updatedLikedProperties);
-    localStorage.setItem("likedProperties", JSON.stringify(updatedLikedProperties)); // Save to localStorage
+    if (user) {
+      const updatedLikedProperties = [...likedProperties, property];
+      setLikedProperties(updatedLikedProperties);
+      localStorage.setItem("likedProperties", JSON.stringify(updatedLikedProperties)); // Save to localStorage
+    }
   };
 
   const handleRemoveProperty = (property: Property) => {
@@ -137,7 +144,7 @@ const Home: React.FC = () => {
             <Box sx={{ display: "flex", alignItems: "center", gap: "10px" }}>
               <IconButton onClick={(e) => setAnchorEl(e.currentTarget)}>
                 <Badge badgeContent={likedProperties.length} color="primary">
-                  <AccountCircleIcon />
+                  
                 </Badge>
               </IconButton>
 
@@ -206,22 +213,7 @@ const Home: React.FC = () => {
                     onClose={handleCloseUserMenu}
                     sx={{ marginTop: "5px" }}
                   >
-                    <MenuItem onClick={() => alert("View Saved Properties clicked")}>
-                      View Saved Properties
-                      <Box sx={{ marginTop: "10px", maxHeight: "300px", overflowY: "auto" }}>
-                        {likedProperties.length === 0 ? (
-                          <Typography>No saved properties</Typography>
-                        ) : (
-                          likedProperties.map((property) => (
-                            <PropertyCard
-                              key={property.id}
-                              property={property}
-                              onClick={() => window.open(property.url, "_blank")}
-                            />
-                          ))
-                        )}
-                      </Box>
-                    </MenuItem>
+                    
                     <MenuItem onClick={handleLogout}>Sign Out</MenuItem>
                   </Menu>
                 </>
