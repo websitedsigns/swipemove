@@ -159,11 +159,11 @@ export const mockProperties: Property[] = [
   {
     id: "8",
     image:
-      "https://media.rightmove.co.uk/2k/1575/157949264/1575_20418999_IMG_00_0000.png",
-    price: 500000,
-    bedrooms: 4,
+      "https://media.rightmove.co.uk/47k/46554/156277190/46554_HOR230220_IMG_00_0000.jpeg",
+    price: 650000,
+    bedrooms: 5,
     type: "House",
-    address: "Heathfield, Pound Hill, Crawley",
-    url: "https://www.rightmove.co.uk/properties/157949624#/?channel=RES_BUY",
+    address: "Ullswater Road, Forge Wood, Crawley, RH10",
+    url: "https://www.rightmove.co.uk/properties/156277190#/?channel=RES_BUY",
   },
 ];

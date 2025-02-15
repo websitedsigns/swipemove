@@ -12,14 +12,13 @@ import {
   Menu,
   MenuItem,
   Typography,
+  TextField,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import PropertyCard from "../components/PropertyCard";
 import "./Home.css";
 import logo from "../assets/SwipeMove-3.png";
-import LoginModal from "../components/LoginModal"; // Import the updated LoginModal
-import RegisterModal from "../components/RegisterModal"; // Import the RegisterModal
 
 const Home: React.FC = () => {
   const [properties, setProperties] = useState<Property[]>([]);
@@ -34,74 +33,37 @@ const Home: React.FC = () => {
     type: "",
   });
 
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null); // For liked properties dropdown
-  const [showLoginModal, setShowLoginModal] = useState(false); // State for login modal
-  const [showRegisterModal, setShowRegisterModal] = useState(false); // State for register modal
-  const [user, setUser] = useState<{ name: string } | null>(null); // Store user info (null = not logged in)
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null); // Liked properties dropdown
+  const [loginAnchorEl, setLoginAnchorEl] = useState<null | HTMLElement>(null); // Login dropdown
 
-  // Handle login success
-  const handleLogin = (userName: string) => {
-    setUser({ name: userName });
-    localStorage.setItem("userName", userName); // Save user name to localStorage
-    setShowLoginModal(false);
-  };
-
-  // Handle register success
-  const handleRegister = (userName: string) => {
-    handleLogin(userName); // Use the same handler for registering and logging in
-    setShowRegisterModal(false); // Close the register modal after registration
-  };
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [user, setUser] = useState<{ name: string } | null>(null); // User state
 
   useEffect(() => {
-    // Check if there's a user name stored in localStorage on component mount
     const storedUserName = localStorage.getItem("userName");
     if (storedUserName) {
       setUser({ name: storedUserName });
     }
   }, []);
 
-  // Handle logout
+  const handleLoginClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setLoginAnchorEl(event.currentTarget);
+  };
+
+  const handleCloseLogin = () => {
+    setLoginAnchorEl(null);
+  };
+
+  const handleLogin = () => {
+    setUser({ name: username });
+    localStorage.setItem("userName", username);
+    setLoginAnchorEl(null); // Close after login
+  };
+
   const handleLogout = () => {
     setUser(null);
-    localStorage.removeItem("userName"); // Clear user name from localStorage
-  };
-
-  const handleSearch = (filters: {
-    minPrice: number;
-    maxPrice: number;
-    minBedrooms: number;
-    maxBedrooms: number;
-    type: string;
-  }) => {
-    setSearchFilters(filters); // Save the filters
-    const filteredProperties = sampleProperties.filter((property) => {
-      return (
-        property.price >= filters.minPrice &&
-        property.price <= filters.maxPrice &&
-        property.bedrooms >= filters.minBedrooms &&
-        property.bedrooms <= filters.maxBedrooms &&
-        (filters.type === "" ||
-          property.type.toLowerCase() === filters.type.toLowerCase())
-      );
-    });
-    setProperties(filteredProperties);
-    setShowSearchModal(false); // Close the modal after searching
-  };
-
-  const handleSwipeLeft = (property: Property) => {
-    console.log("Swiped left:", property);
-  };
-
-  const handleSwipeRight = (property: Property) => {
-    setLikedProperties((prev) => [...prev, property]);
-  };
-
-  const handleLikedPropertiesClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
+    localStorage.removeItem("userName");
   };
 
   return (
@@ -115,7 +77,7 @@ const Home: React.FC = () => {
               display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
-              padding: "1px 20px",
+              padding: "10px 20px",
               backgroundColor: "#f5f5f5",
               position: "fixed",
               top: 0,
@@ -124,35 +86,74 @@ const Home: React.FC = () => {
               zIndex: 1000,
             }}
           >
-            {/* Logo and Search Button */}
-            <Box sx={{ display: "flex", alignItems: "center", gap: "20px" }}>
-              <IconButton onClick={() => setShowSearchModal(true)}>
-                <SearchIcon />
-              </IconButton>
-            </Box>
-            <Box sx={{ display: "flex", alignItems: "center", gap: "20px" }}>
-              <img
-                src={logo}
-                alt="SwipeMove Logo"
-                style={{ width: "150px", height: "auto", maxWidth: "100%" }}
-              />
-            </Box>
+            {/* Search Button */}
+            <IconButton onClick={() => setShowSearchModal(true)}>
+              <SearchIcon />
+            </IconButton>
+
+            {/* Logo */}
+            <img
+              src={logo}
+              alt="SwipeMove Logo"
+              style={{ width: "150px", height: "auto", maxWidth: "100%" }}
+            />
 
             {/* Liked Properties and User Authentication */}
             <Box sx={{ display: "flex", alignItems: "center", gap: "10px" }}>
-              <IconButton onClick={handleLikedPropertiesClick}>
+              <IconButton onClick={(e) => setAnchorEl(e.currentTarget)}>
                 <Badge badgeContent={likedProperties.length} color="primary">
                   <AccountCircleIcon />
                 </Badge>
               </IconButton>
+
               {!user ? (
-                <Button
-                  variant="contained"
-                  sx={{ backgroundColor: "#5DC2BB", color: "white" }}
-                  onClick={() => setShowLoginModal(true)} // Show login modal
-                >
-                  Sign In / Register
-                </Button>
+                <>
+                  <Button
+                    variant="contained"
+                    sx={{ backgroundColor: "#5DC2BB", color: "white" }}
+                    onClick={handleLoginClick}
+                  >
+                    Sign In
+                  </Button>
+
+                  {/* Login Pop-down Menu */}
+                  <Menu
+                    anchorEl={loginAnchorEl}
+                    open={Boolean(loginAnchorEl)}
+                    onClose={handleCloseLogin}
+                    sx={{ marginTop: "5px" }}
+                  >
+                    <Box sx={{ padding: "15px", width: "250px" }}>
+                      <TextField
+                        fullWidth
+                        label="Username"
+                        variant="outlined"
+                        size="small"
+                        margin="dense"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                      />
+                      <TextField
+                        fullWidth
+                        label="Password"
+                        type="password"
+                        variant="outlined"
+                        size="small"
+                        margin="dense"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                      />
+                      <Button
+                        fullWidth
+                        variant="contained"
+                        sx={{ marginTop: "10px", backgroundColor: "#6200ea" }}
+                        onClick={handleLogin}
+                      >
+                        Login
+                      </Button>
+                    </Box>
+                  </Menu>
+                </>
               ) : (
                 <>
                   <Typography variant="h6">{user.name}</Typography>
@@ -162,7 +163,7 @@ const Home: React.FC = () => {
                       backgroundColor: "#FF5F5F",
                       color: "white",
                     }}
-                    onClick={handleLogout} // Log out user
+                    onClick={handleLogout}
                   >
                     Sign Out
                   </Button>
@@ -175,47 +176,33 @@ const Home: React.FC = () => {
           <Menu
             anchorEl={anchorEl}
             open={Boolean(anchorEl)}
-            onClose={handleClose}
+            onClose={() => setAnchorEl(null)}
           >
             {likedProperties.map((property) => (
-              <MenuItem key={property.id} onClick={handleClose}>
-                <PropertyCard
-                  property={property}
-                  onClick={() => window.open(property.url, "_blank")}
-                />
+              <MenuItem key={property.id} onClick={() => window.open(property.url, "_blank")}>
+                <PropertyCard property={property} onClick={() => {}} />
               </MenuItem>
             ))}
           </Menu>
 
-          {/* Search Modal */}
+          {/* Search Filters Modal */}
           {showSearchModal && (
             <SearchFilters
-              onSearch={handleSearch}
+              onSearch={(filters) => {
+                setSearchFilters(filters);
+                setShowSearchModal(false);
+              }}
               onClose={() => setShowSearchModal(false)}
             />
           )}
-
-          {/* Login Modal */}
-          <LoginModal
-            open={showLoginModal}
-            onClose={() => setShowLoginModal(false)}
-            onLogin={handleLogin} // Pass the onLogin handler to the LoginModal
-          />
-
-          {/* Register Modal */}
-          <RegisterModal
-            open={showRegisterModal}
-            onClose={() => setShowRegisterModal(false)}
-            onRegister={handleRegister} // Use handleRegister for registration
-          />
 
           {/* Main Content */}
           <Box sx={{ marginTop: "80px" }}>
             {properties.length > 0 ? (
               <SwipeContainer
                 properties={properties}
-                onSwipeLeft={handleSwipeLeft}
-                onSwipeRight={handleSwipeRight}
+                onSwipeLeft={() => {}}
+                onSwipeRight={() => {}}
               />
             ) : (
               <Box className="landing-page">
