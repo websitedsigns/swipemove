@@ -137,7 +137,7 @@ const Home: React.FC = () => {
             <img
               src={logo}
               alt="SwipeMove Logo"
-              style={{ width: "150px", height: "auto", maxWidth: "100%" }}
+              style={{ width: "125spx", height: "auto", maxWidth: "100%", }}
             />
 
             {/* Liked Properties and User Authentication */}
