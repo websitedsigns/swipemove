@@ -88,6 +88,19 @@ const Home: React.FC = () => {
     localStorage.setItem("likedProperties", JSON.stringify(updatedLikedProperties)); // Save to localStorage
   };
 
+  const handleRemoveProperty = (property: Property) => {
+    const updatedLikedProperties = likedProperties.filter(
+      (likedProperty) => likedProperty.id !== property.id
+    );
+    setLikedProperties(updatedLikedProperties);
+    localStorage.setItem("likedProperties", JSON.stringify(updatedLikedProperties)); // Save to localStorage
+  };
+
+  const handleClearLikedProperties = () => {
+    setLikedProperties([]);
+    localStorage.removeItem("likedProperties"); // Clear from localStorage
+  };
+
   return (
     <div>
       {showWelcome ? (
@@ -195,10 +208,21 @@ const Home: React.FC = () => {
                   >
                     <MenuItem onClick={() => alert("View Saved Properties clicked")}>
                       View Saved Properties
+                      <Box sx={{ marginTop: "10px", maxHeight: "300px", overflowY: "auto" }}>
+                        {likedProperties.length === 0 ? (
+                          <Typography>No saved properties</Typography>
+                        ) : (
+                          likedProperties.map((property) => (
+                            <PropertyCard
+                              key={property.id}
+                              property={property}
+                              onClick={() => window.open(property.url, "_blank")}
+                            />
+                          ))
+                        )}
+                      </Box>
                     </MenuItem>
-                    <MenuItem onClick={handleLogout}>
-                      Sign Out
-                    </MenuItem>
+                    <MenuItem onClick={handleLogout}>Sign Out</MenuItem>
                   </Menu>
                 </>
               )}
@@ -212,10 +236,26 @@ const Home: React.FC = () => {
             onClose={() => setAnchorEl(null)}
           >
             {likedProperties.map((property) => (
-              <MenuItem key={property.id} onClick={() => window.open(property.url, "_blank")}>
+              <MenuItem
+                key={property.id}
+                onClick={(e) => {
+                  e.preventDefault();
+                }}
+              >
                 <PropertyCard property={property} onClick={() => {}} />
+                <Button
+                  variant="outlined"
+                  onClick={(e) => {
+                    e.stopPropagation(); // Prevent the click from triggering the link
+                    handleRemoveProperty(property);
+                  }}
+                  sx={{ marginLeft: "10px", fontSize: "12px" }}
+                >
+                  Remove
+                </Button>
               </MenuItem>
             ))}
+            <MenuItem onClick={handleClearLikedProperties}>Clear All</MenuItem>
           </Menu>
 
           {/* Search Filters Modal */}
