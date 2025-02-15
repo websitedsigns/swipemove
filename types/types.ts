@@ -1,5 +1,6 @@
 //types.ts
 export interface Property {
+  title: string | undefined;
   id: string;
   image: string;
   price: number;
