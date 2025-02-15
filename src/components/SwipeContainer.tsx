@@ -41,25 +41,61 @@ const SwipeContainer: React.FC<SwipeContainerProps> = ({ properties, onSwipeLeft
             transition: 'transform 0.3s ease',
           }}
         >
-          <PropertyCard property={properties[currentIndex]} onClick={() => window.open(properties[currentIndex].url, '_blank')} />
+
+<Box
+  sx={{
+    display: "flex",
+    justifyContent: "center", // Align horizontally to the center
+    alignItems: "flex-start", // Align vertically to the start, but you can change it to 'center' or 'flex-end'
+    height: "80vh", // Use full viewport height
+    paddingTop: "0px", // Adjust the top padding to move it lower
+    }}
+>
+<PropertyCard property={properties[currentIndex]} onClick={() => window.open(properties[currentIndex].url, '_blank')} />
+</Box>
         </div>
       </div>
-      <Box sx={{ marginTop: '50px', display: 'flex', justifyContent: 'center', gap: '20px' }}>
-        <Button
-          variant="contained"
-          sx={{ backgroundColor: 'red', color: 'white', width: '4em', fontSize: '1rem', padding: '10px 20px', borderRadius: '10px' }}
-          onClick={() => handleSwipe('left')}
-        >
-          x
-        </Button>
-        <Button
-          variant="contained"
-          sx={{ backgroundColor: '#5DC2BB', color: 'black', width: '4em', fontSize: '1rem', padding: '10px 20px', borderRadius: '10px' }}
-          onClick={() => handleSwipe('right')}
-        > Save
-          
-        </Button>
-      </Box>
+      <Box
+  sx={{
+    position: 'absolute', // Position relative to parent container
+    top: '83%', // Adjust this percentage to move the buttons higher or lower
+    left: '50%',
+    transform: 'translateX(-50%)', // Centers the buttons horizontally
+    display: 'flex',
+    justifyContent: 'center',
+    gap: '20px',
+  }}
+>
+  <Button
+    variant="contained"
+    sx={{
+      backgroundColor: 'red',
+      color: 'white',
+      width: '4em',
+      fontSize: '1rem',
+      padding: '10px 20px',
+      borderRadius: '10px',
+    }}
+    onClick={() => handleSwipe('left')}
+  >
+    x
+  </Button>
+  <Button
+    variant="contained"
+    sx={{
+      backgroundColor: '#5DC2BB',
+      color: 'black',
+      width: '4em',
+      fontSize: '1rem',
+      padding: '10px 20px',
+      borderRadius: '10px',
+    }}
+    onClick={() => handleSwipe('right')}
+  >
+    Save
+  </Button>
+</Box>
+
     </Box>
   );
 };
