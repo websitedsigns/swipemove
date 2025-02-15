@@ -13,10 +13,19 @@ import {
   MenuItem,
   Typography,
   TextField,
+  Modal,
+  List,
+  ListItem,
+  ListItemText,
+  Divider,
+  Avatar,
+  Icon,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import PropertyCard from "../components/PropertyCard";
+import DeleteIcon from "@mui/icons-material/Delete";  // For the 'X' delete icon
+import ShareIcon from "@mui/icons-material/Share";  // For the 'Share' button
 import "./Home.css";
 import logo from "../assets/SwipeMove-3.png";
 
@@ -35,15 +44,23 @@ const Home: React.FC = () => {
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null); // Liked properties dropdown
   const [loginAnchorEl, setLoginAnchorEl] = useState<null | HTMLElement>(null); // Login dropdown
+  const [userMenuAnchorEl, setUserMenuAnchorEl] = useState<null | HTMLElement>(null); // User menu dropdown
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState<{ name: string } | null>(null); // User state
+  const [viewSavedProperties, setViewSavedProperties] = useState(false); // Toggle for viewing saved properties
 
   useEffect(() => {
     const storedUserName = localStorage.getItem("userName");
+    const storedLikedProperties = localStorage.getItem("likedProperties");
+
     if (storedUserName) {
       setUser({ name: storedUserName });
+    }
+
+    if (storedLikedProperties) {
+      setLikedProperties(JSON.parse(storedLikedProperties));
     }
   }, []);
 
@@ -64,6 +81,52 @@ const Home: React.FC = () => {
   const handleLogout = () => {
     setUser(null);
     localStorage.removeItem("userName");
+    setUserMenuAnchorEl(null); // Close user menu
+  };
+
+  const handleUserMenuClick = (event: React.MouseEvent<HTMLElement>) => {
+    setUserMenuAnchorEl(event.currentTarget);
+  };
+
+  const handleCloseUserMenu = () => {
+    setUserMenuAnchorEl(null);
+  };
+
+  const handlePropertyLike = (property: Property) => {
+    const updatedLikedProperties = [...likedProperties, property];
+    setLikedProperties(updatedLikedProperties);
+    localStorage.setItem("likedProperties", JSON.stringify(updatedLikedProperties)); // Save to localStorage
+  };
+
+  const handleDeleteProperty = (propertyId: string) => {
+    const updatedLikedProperties = likedProperties.filter(
+      (property) => property.id !== propertyId
+    );
+    setLikedProperties(updatedLikedProperties);
+    localStorage.setItem("likedProperties", JSON.stringify(updatedLikedProperties)); // Save updated list to localStorage
+  };
+
+  const handleShareProperty = (property: Property) => {
+    const shareLink = `Check out this property: ${property.url}`;
+    if (navigator.share) {
+      navigator.share({
+        title: property.title,
+        text: shareLink,
+        url: property.url,
+      });
+    } else {
+      // Fallback if Web Share API is not available
+      alert(`Share link: ${shareLink}`);
+    }
+  };
+
+  const handleViewSavedProperties = () => {
+    setViewSavedProperties(true);
+    setUserMenuAnchorEl(null); // Close the user menu
+  };
+
+  const handleCloseSavedProperties = () => {
+    setViewSavedProperties(false);
   };
 
   return (
@@ -156,17 +219,28 @@ const Home: React.FC = () => {
                 </>
               ) : (
                 <>
-                  <Typography variant="h6">{user.name}</Typography>
-                  <Button
-                    variant="contained"
-                    sx={{
-                      backgroundColor: "#FF5F5F",
-                      color: "white",
-                    }}
-                    onClick={handleLogout}
+                  <Typography
+                    variant="h6"
+                    sx={{ cursor: "pointer" }}
+                    onClick={handleUserMenuClick}
                   >
-                    Sign Out
-                  </Button>
+                    {user.name}
+                  </Typography>
+
+                  {/* User Menu (Sign Out and View Saved Properties) */}
+                  <Menu
+                    anchorEl={userMenuAnchorEl}
+                    open={Boolean(userMenuAnchorEl)}
+                    onClose={handleCloseUserMenu}
+                    sx={{ marginTop: "5px" }}
+                  >
+                    <MenuItem onClick={handleViewSavedProperties}>
+                      View Saved Properties
+                    </MenuItem>
+                    <MenuItem onClick={handleLogout}>
+                      Sign Out
+                    </MenuItem>
+                  </Menu>
                 </>
               )}
             </Box>
@@ -195,6 +269,61 @@ const Home: React.FC = () => {
               onClose={() => setShowSearchModal(false)}
             />
           )}
+
+          {/* View Saved Properties Modal */}
+          <Modal
+            open={viewSavedProperties}
+            onClose={handleCloseSavedProperties}
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Box
+              sx={{
+                backgroundColor: "white",
+                padding: "20px",
+                width: "80%",
+                maxHeight: "80vh",
+                overflowY: "auto",
+              }}
+            >
+              <Typography variant="h6" gutterBottom>
+                Saved Properties
+              </Typography>
+              <List>
+                {likedProperties.length > 0 ? (
+                  likedProperties.map((property) => (
+                    <div key={property.id}>
+                      <ListItem button onClick={() => window.open(property.url, "_blank")}>
+                        <Box sx={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                          <Avatar
+                            src={property.image} // Assuming `image` field contains the URL to the property image
+                            alt={property.title}
+                            sx={{ width: 60, height: 60 }}
+                          />
+                          <ListItemText
+                            primary={property.title}
+                            secondary={`Price: £${property.price} | Bedrooms: ${property.bedrooms}`}
+                          />
+                          <IconButton onClick={() => handleDeleteProperty(property.id)}>
+                            <DeleteIcon />
+                          </IconButton>
+                          <IconButton onClick={() => handleShareProperty(property)}>
+                            <ShareIcon />
+                          </IconButton>
+                        </Box>
+                      </ListItem>
+                      <Divider />
+                    </div>
+                  ))
+                ) : (
+                  <Typography>No saved properties.</Typography>
+                )}
+              </List>
+            </Box>
+          </Modal>
 
           {/* Main Content */}
           <Box sx={{ marginTop: "80px" }}>
