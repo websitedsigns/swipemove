@@ -144,7 +144,6 @@ const Home: React.FC = () => {
             <Box sx={{ display: "flex", alignItems: "center", gap: "10px" }}>
               <IconButton onClick={(e) => setAnchorEl(e.currentTarget)}>
                 <Badge badgeContent={likedProperties.length} color="primary">
-                  <AccountCircleIcon />
                 </Badge>
               </IconButton>
 
