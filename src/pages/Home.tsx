@@ -213,28 +213,7 @@ const Home: React.FC = () => {
                     onClose={handleCloseUserMenu}
                     sx={{ marginTop: "5px" }}
                   >
-                    <MenuItem>
-                      <Typography variant="h6">View Saved Properties</Typography>
-                      <Box
-                        sx={{
-                          marginTop: "10px",
-                          maxHeight: "300px",
-                          overflowY: "auto",
-                        }}
-                      >
-                        {likedProperties.length === 0 ? (
-                          <Typography>No saved properties</Typography>
-                        ) : (
-                          likedProperties.map((property) => (
-                            <PropertyCard
-                              key={property.id}
-                              property={property}
-                              onClick={() => window.open(property.url, "_blank")}
-                            />
-                          ))
-                        )}
-                      </Box>
-                    </MenuItem>
+                 
                     <MenuItem onClick={handleLogout}>Sign Out</MenuItem>
                   </Menu>
                 </>
