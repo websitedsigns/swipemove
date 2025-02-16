@@ -137,14 +137,14 @@ const Home: React.FC = () => {
             <img
               src={logo}
               alt="SwipeMove Logo"
-              style={{ width: "125px", height: "auto", maxWidth: "100%", }}
+              style={{ width: "150px", height: "auto", maxWidth: "100%" }}
             />
 
             {/* Liked Properties and User Authentication */}
             <Box sx={{ display: "flex", alignItems: "center", gap: "10px" }}>
               <IconButton onClick={(e) => setAnchorEl(e.currentTarget)}>
                 <Badge badgeContent={likedProperties.length} color="primary">
-                  
+                  <AccountCircleIcon />
                 </Badge>
               </IconButton>
 
@@ -213,7 +213,28 @@ const Home: React.FC = () => {
                     onClose={handleCloseUserMenu}
                     sx={{ marginTop: "5px" }}
                   >
-                    
+                    <MenuItem>
+                      <Typography variant="h6">View Saved Properties</Typography>
+                      <Box
+                        sx={{
+                          marginTop: "10px",
+                          maxHeight: "300px",
+                          overflowY: "auto",
+                        }}
+                      >
+                        {likedProperties.length === 0 ? (
+                          <Typography>No saved properties</Typography>
+                        ) : (
+                          likedProperties.map((property) => (
+                            <PropertyCard
+                              key={property.id}
+                              property={property}
+                              onClick={() => window.open(property.url, "_blank")}
+                            />
+                          ))
+                        )}
+                      </Box>
+                    </MenuItem>
                     <MenuItem onClick={handleLogout}>Sign Out</MenuItem>
                   </Menu>
                 </>
