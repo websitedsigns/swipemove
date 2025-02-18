@@ -22,6 +22,7 @@ const WelcomeScreen: React.FC<WelcomeScreenProps> = ({ onComplete }) => {
   return (
     <div className="welcome-container" onClick={handleClick}>
       <img src={logo} alt="SwipeMove Logo" className="welcome-logo" />
+     <p>Click to Enter</p>
     </div>
   );
 };
